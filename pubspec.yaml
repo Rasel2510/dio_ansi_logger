@@ -2,10 +2,10 @@ name: dio_pretty_logger
 description: >-
   A beautiful, Postman-style Dio interceptor that logs HTTP requests and
   responses with ANSI colors, structured formatting, and customizable themes.
-version: 1.0.1
-homepage: https://github.com/yourusername/dio_pretty_logger
-repository: https://github.com/yourusername/dio_pretty_logger
-issue_tracker: https://github.com/yourusername/dio_pretty_logger/issues
+version: 1.0.0
+homepage: https://github.com/rasel2510/dio_pretty_logger
+repository: https://github.com/rasel2510/dio_pretty_logger
+issue_tracker: https://github.com/rasel2510/dio_pretty_logger/issues
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
