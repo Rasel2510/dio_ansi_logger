@@ -52,7 +52,20 @@ const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
 ///
 /// > **Note:** ANSI colors render in the **VS Code Debug Console** and most
 /// > Unix terminals. In Android Studio install the **ANSI Highlighting** plugin.
-final class DioLogger extends Interceptor {
+///
+/// ## Extending DioLogger
+/// ```dart
+/// base class MyLogger extends DioLogger {
+///   const MyLogger() : super(theme: LoggerThemes.dark);
+///
+///   @override
+///   void onError(DioException err, ErrorInterceptorHandler handler) {
+///     // your custom error handling
+///     super.onError(err, handler);
+///   }
+/// }
+/// ```
+base class DioLogger extends Interceptor {
   /// The color theme. Defaults to [LoggerThemes.dark].
   final LoggerTheme theme;
 
@@ -82,6 +95,9 @@ final class DioLogger extends Interceptor {
 
   // ─── Request ─────────────────────────────────────────────────────────────────
 
+  /// Intercepts outgoing requests and logs method, URL, headers, and body.
+  ///
+  /// Only runs when [logRequest] is `true`.
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (logRequest) {
@@ -119,6 +135,9 @@ final class DioLogger extends Interceptor {
 
   // ─── Response ─────────────────────────────────────────────────────────────────
 
+  /// Intercepts successful responses and logs status, method, URL, headers, and body.
+  ///
+  /// Only runs when [logResponse] is `true`.
   @override
   void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
     if (logResponse) {
@@ -152,6 +171,9 @@ final class DioLogger extends Interceptor {
 
   // ─── Error ────────────────────────────────────────────────────────────────────
 
+  /// Intercepts errors and logs the type, method, URL, status, and message.
+  ///
+  /// Only runs when [logError] is `true` and the app is in debug mode.
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (logError && _kDebugMode) {

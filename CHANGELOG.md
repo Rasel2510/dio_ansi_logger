@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.2
+
+- Added `///` dartdoc comments to `onRequest`, `onResponse`, and `onError` — fixes pub.dev documentation score (was <20%)
+- Added extending example to `DioLogger` class documentation
+- Fixed: users must declare `base class MyLogger extends DioLogger` (not `final class`) — documented in README and class docs
+
+
+
+- Changed `DioLogger` from `final class` to `base class` — can now be extended outside the package
+
 ## 1.0.1
 
 - Removed `flutter` dependency — package is now pure Dart, works in Flutter, Dart CLI, and server apps
