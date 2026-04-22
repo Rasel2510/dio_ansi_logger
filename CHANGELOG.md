@@ -1,12 +1,19 @@
 # Changelog
 
+## 1.0.3
+
+- Added `AnsiLog` — a general-purpose static logger for use anywhere in your app
+  - `AnsiLog.debug()` — dim white, for verbose dev output
+  - `AnsiLog.info()` — cyan, for general info
+  - `AnsiLog.success()` — green, for successful operations
+  - `AnsiLog.warning()` — yellow, for non-critical issues
+  - `AnsiLog.error()` — red, with optional `error:` object
+  - All methods support custom `theme:` and `tag:` parameters
+- Changed `DioLogger` from `final class` to `base class` — can now be extended outside the package
+- Added `///` dartdoc comments to `onRequest`, `onResponse`, and `onError`
+- Fixed pub.dev documentation score (was <20%)
+
 ## 1.0.2
-
-- Added `///` dartdoc comments to `onRequest`, `onResponse`, and `onError` — fixes pub.dev documentation score (was <20%)
-- Added extending example to `DioLogger` class documentation
-- Fixed: users must declare `base class MyLogger extends DioLogger` (not `final class`) — documented in README and class docs
-
-
 
 - Changed `DioLogger` from `final class` to `base class` — can now be extended outside the package
 

@@ -23,3 +23,4 @@ export 'src/ansi.dart';
 export 'src/theme.dart';
 export 'src/themes.dart';
 export 'src/logger.dart';
+export 'src/ansi_log.dart';
