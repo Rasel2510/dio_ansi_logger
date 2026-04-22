@@ -1,0 +1,29 @@
+name: dio_pretty_logger
+description: >-
+  A beautiful, Postman-style Dio interceptor that logs HTTP requests and
+  responses with ANSI colors, structured formatting, and customizable themes.
+version: 1.0.1
+homepage: https://github.com/yourusername/dio_pretty_logger
+repository: https://github.com/yourusername/dio_pretty_logger
+issue_tracker: https://github.com/yourusername/dio_pretty_logger/issues
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  dio: ">=5.0.0 <6.0.0"
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ">=3.0.0"
+
+topics:
+  - dio
+  - networking
+  - logging
+  - http
+  - debug
