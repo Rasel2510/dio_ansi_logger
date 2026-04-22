@@ -118,4 +118,39 @@ final class LoggerTheme {
     required this.dim,
     required this.reset,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LoggerTheme &&
+          sectionBorder == other.sectionBorder &&
+          sectionTitle == other.sectionTitle &&
+          label == other.label &&
+          value == other.value &&
+          methodGet == other.methodGet &&
+          methodPost == other.methodPost &&
+          methodPut == other.methodPut &&
+          methodDelete == other.methodDelete &&
+          methodPatch == other.methodPatch &&
+          statusSuccess == other.statusSuccess &&
+          statusRedirect == other.statusRedirect &&
+          statusError == other.statusError &&
+          jsonKey == other.jsonKey &&
+          jsonString == other.jsonString &&
+          jsonNumber == other.jsonNumber &&
+          jsonBool == other.jsonBool &&
+          jsonNull == other.jsonNull &&
+          errorTitle == other.errorTitle &&
+          errorValue == other.errorValue &&
+          dim == other.dim &&
+          reset == other.reset;
+
+  @override
+  int get hashCode => Object.hashAll([
+        sectionBorder, sectionTitle, label, value,
+        methodGet, methodPost, methodPut, methodDelete, methodPatch,
+        statusSuccess, statusRedirect, statusError,
+        jsonKey, jsonString, jsonNumber, jsonBool, jsonNull,
+        errorTitle, errorValue, dim, reset,
+      ]);
 }

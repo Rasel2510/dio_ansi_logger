@@ -3,11 +3,13 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 
-import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 
 import 'theme.dart';
 import 'themes.dart';
+
+/// Whether the app is running in debug mode (not compiled with `-Ddart.vm.product=true`).
+const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
 
 /// A Dio interceptor that logs HTTP requests, responses, and errors
 /// in a structured, Postman-style format with ANSI terminal colors.
@@ -62,7 +64,7 @@ final class DioLogger extends Interceptor {
 
   /// Whether to log errors. Defaults to `true`.
   ///
-  /// Errors are only logged in [kDebugMode].
+  /// Errors are only logged in debug mode.
   final bool logError;
 
   /// Maximum body characters before truncation.
@@ -152,7 +154,7 @@ final class DioLogger extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (logError && kDebugMode) {
+    if (logError && _kDebugMode) {
       final t = theme;
       final method = err.requestOptions.method.toUpperCase();
       final url = '${err.requestOptions.baseUrl}${err.requestOptions.path}';

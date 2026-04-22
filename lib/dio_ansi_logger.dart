@@ -1,5 +1,5 @@
 /// A beautiful, Postman-style Dio HTTP logger with ANSI colors and
-/// customizable themes for Flutter & Dart applications.
+/// customizable themes for Dart & Flutter applications.
 ///
 /// ## Quick Start
 /// ```dart
@@ -13,6 +13,10 @@
 /// ```dart
 /// dio.interceptors.add(DioLogger(theme: LoggerThemes.minimal));
 /// ```
+/// {@canonicalFor ansi.Ansi}
+/// {@canonicalFor theme.LoggerTheme}
+/// {@canonicalFor themes.LoggerThemes}
+/// {@canonicalFor logger.DioLogger}
 library dio_ansi_logger;
 
 export 'src/ansi.dart';
