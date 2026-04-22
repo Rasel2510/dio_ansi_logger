@@ -1,5 +1,7 @@
 # Changelog
 
+
+
 ## 1.0.0
 
 - Initial release 🎉
@@ -11,5 +13,3 @@
 - Toggle `logRequest`, `logResponse`, `logError` independently
 - Pretty-printed, syntax-highlighted JSON output
 - Zero dependencies beyond `dio` and `flutter`
-- Added `LoggerThemes.matrix`
-— bright green on black theme 🟢

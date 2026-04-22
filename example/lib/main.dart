@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:dio_pretty_logger/dio_pretty_logger.dart';
+import 'package:dio_ansi_logger/dio_ansi_logger.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -1,10 +1,10 @@
 {
   "roots": [
-    "dio_pretty_logger"
+    "dio_ansi_logger"
   ],
   "packages": [
     {
-      "name": "dio_pretty_logger",
+      "name": "dio_ansi_logger",
       "version": "1.0.0",
       "dependencies": [
         "dio",

@@ -1,5 +1,5 @@
-name: dio_pretty_logger_example
-description: Example app for dio_pretty_logger.
+name: dio_ansi_logger_example
+description: Example app for dio_ansi_logger.
 publish_to: 'none'
 version: 1.0.0
 
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   dio: ">=5.0.0 <6.0.0"
-  dio_pretty_logger:
+  dio_ansi_logger:
     path: ../
 
 dev_dependencies:

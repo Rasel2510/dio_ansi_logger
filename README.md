@@ -1,4 +1,4 @@
-# dio_pretty_logger
+# dio_ansi_logger
 
 A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and responses with **ANSI colors**, structured formatting, and fully customizable themes — straight to your Flutter debug console.
 
@@ -60,7 +60,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dio_pretty_logger: ^1.0.0
+  dio_ansi_logger: ^1.0.0
 ```
 
 Then run:
@@ -75,7 +75,7 @@ flutter pub get
 
 ```dart
 import 'package:dio/dio.dart';
-import 'package:dio_pretty_logger/dio_pretty_logger.dart';
+import 'package:dio_ansi_logger/dio_ansi_logger.dart';
 
 final dio = Dio();
 dio.interceptors.add(const DioLogger());
@@ -106,7 +106,7 @@ dio.interceptors.add(const DioLogger(theme: LoggerThemes.matrix)); // 🟢 brigh
 Use `LoggerTheme` with `Ansi` constants to build your own palette:
 
 ```dart
-import 'package:dio_pretty_logger/dio_pretty_logger.dart';
+import 'package:dio_ansi_logger/dio_ansi_logger.dart';
 
 const myTheme = LoggerTheme(
   sectionBorder:   Ansi.dim + Ansi.magenta,

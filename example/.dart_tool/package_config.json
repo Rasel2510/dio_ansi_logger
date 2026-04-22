@@ -38,7 +38,7 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "dio_pretty_logger",
+      "name": "dio_ansi_logger",
       "rootUri": "../../",
       "packageUri": "lib/",
       "languageVersion": "3.0"
@@ -200,7 +200,7 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "dio_pretty_logger_example",
+      "name": "dio_ansi_logger_example",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.0"
