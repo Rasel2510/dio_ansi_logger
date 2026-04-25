@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.4
+
+- Added `AnsiLog.enabled` — global on/off switch, auto-off in release builds
+  - Defaults to `!bool.fromEnvironment('dart.vm.product')` — debug only
+  - Set once in `main.dart`: `AnsiLog.enabled = kDebugMode;`
+  - All methods (`debug`, `info`, `success`, `warning`, `error`, `json`) respect this flag
+- Added `AnsiLog.json(data)` — pretty prints any `Map` or `List` with full ANSI syntax highlighting
+  - Keys in cyan, strings in green, numbers in yellow, booleans in magenta, nulls in dim
+  - Supports custom `theme:` and `tag:` parameters
+  - Falls back to `debug()` if data is not JSON-encodable
+
 ## 1.0.3
 
 - Added `AnsiLog` — a general-purpose static logger for use anywhere in your app
