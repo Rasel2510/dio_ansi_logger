@@ -60,7 +60,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dio_ansi_logger: ^1.0.0
+  dio_ansi_logger: ^1.0.5
 ```
 
 Then run:

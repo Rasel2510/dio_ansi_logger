@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+
+- Fixed static analysis warning: added
+curly braces to while loop in 
+AnsiLog._colorizeJson (lib/src/ansi_log.dart:218)
+
 ## 1.0.4
 
 - Added `AnsiLog.enabled` — global on/off switch, auto-off in release builds

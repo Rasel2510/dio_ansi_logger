@@ -215,7 +215,9 @@ abstract final class AnsiLog {
         final token = json.substring(start, i);
         // Check if next non-whitespace char is ':' → it's a key
         var j = i;
-        while (j < json.length && (json[j] == ' ' || json[j] == '\n')) j++;
+        while (j < json.length && (json[j] == ' ' || json[j] == '\n')) {
+          j++;
+        }
         if (j < json.length && json[j] == ':') {
           buf.write('${t.jsonKey}$token$reset');
         } else {
@@ -233,8 +235,7 @@ abstract final class AnsiLog {
                 json[i] == 'e' ||
                 json[i] == 'E' ||
                 json[i] == '+' ||
-                (json[i].codeUnitAt(0) >= 48 &&
-                    json[i].codeUnitAt(0) <= 57))) {
+                (json[i].codeUnitAt(0) >= 48 && json[i].codeUnitAt(0) <= 57))) {
           i++;
         }
         buf.write('${t.jsonNumber}${json.substring(start, i)}$reset');
@@ -268,4 +269,3 @@ abstract final class AnsiLog {
     return buf.toString();
   }
 }
-
