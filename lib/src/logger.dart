@@ -107,6 +107,12 @@ base class DioLogger extends Interceptor {
   /// Defaults to `true`.
   final bool logResponseTime;
 
+  /// Whether to print response headers. Defaults to `false`.
+  ///
+  /// Response headers are usually noisy (server-timing, x-frame-options, etc.)
+  /// so they are hidden by default. Set to `true` when you need to inspect them.
+  final bool logResponseHeaders;
+
   /// Header keys (lowercase) whose values are replaced with [redactedPlaceholder].
   ///
   /// Matching is case-insensitive. Defaults to
@@ -125,6 +131,7 @@ base class DioLogger extends Interceptor {
     this.logError = true,
     this.maxBodyLength = 5000,
     this.logResponseTime = true,
+    this.logResponseHeaders = false,
     this.redactedHeaders = const {
       'authorization',
       'x-api-key',
@@ -205,7 +212,7 @@ base class DioLogger extends Interceptor {
 
       buf.writeln(_border('RESPONSE ✓', t));
       buf.writeln(_field(
-          'Status ', _statusColor(status) + '$status $statusMsg' + t.reset, t));
+          'Status ', '${_statusColor(status)}$status $statusMsg${t.reset}', t));
       buf.writeln(
           _field('Method ', _methodColor(method) + method + t.reset, t));
       buf.writeln(_field('URL    ', t.value + url + t.reset, t));
@@ -214,7 +221,7 @@ base class DioLogger extends Interceptor {
         buf.writeln(_field('Time   ', '${t.value}⏱ $elapsed ms${t.reset}', t));
       }
 
-      if (response.headers.map.isNotEmpty) {
+      if (logResponseHeaders && response.headers.map.isNotEmpty) {
         buf.writeln(_field('Headers', '', t));
         for (final entry in response.headers.map.entries) {
           final raw = entry.value.join(', ');
