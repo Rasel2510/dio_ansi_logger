@@ -370,12 +370,18 @@ base class DioLogger extends Interceptor {
   }
 
   String _colorizeValue(String val, LoggerTheme t) {
-    if (val.startsWith('"') && val.endsWith('"'))
+    if (val.startsWith('"') && val.endsWith('"')) {
       return '${t.jsonString}$val${t.reset}';
-    if (val == 'true' || val == 'false') return '${t.jsonBool}$val${t.reset}';
-    if (val == 'null') return '${t.jsonNull}$val${t.reset}';
-    if (RegExp(r'^-?\d+(\.\d+)?$').hasMatch(val))
+    }
+    if (val == 'true' || val == 'false') {
+      return '${t.jsonBool}$val${t.reset}';
+    }
+    if (val == 'null') {
+      return '${t.jsonNull}$val${t.reset}';
+    }
+    if (RegExp(r'^-?\d+(\.\d+)?$').hasMatch(val)) {
       return '${t.jsonNumber}$val${t.reset}';
+    }
     return '${t.dim}$val${t.reset}';
   }
 
@@ -389,8 +395,12 @@ base class DioLogger extends Interceptor {
       };
 
   String _statusColor(int status) {
-    if (status >= 200 && status < 300) return theme.statusSuccess;
-    if (status >= 300 && status < 400) return theme.statusRedirect;
+    if (status >= 200 && status < 300) {
+      return theme.statusSuccess;
+    }
+    if (status >= 300 && status < 400) {
+      return theme.statusRedirect;
+    }
     return theme.statusError;
   }
 

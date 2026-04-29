@@ -2,7 +2,7 @@ name: dio_ansi_logger
 description: >-
   A beautiful, Postman-style Dio interceptor that logs HTTP requests and
   responses with ANSI colors, structured formatting, and customizable themes.
-version: 1.0.6
+version: 1.0.7
 homepage: https://github.com/Rasel2510/dio_ansi_logger
 repository: https://github.com/Rasel2510/dio_ansi_logger
 issue_tracker: https://github.com/Rasel2510/dio_ansi_logger/issues

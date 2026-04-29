@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.7
+
+- Fixed static analysis: added curly braces to `if` statements in `_colorizeValue` and `_statusColor` (lib/src/logger.dart)
 ## 1.0.6
 
 ### ✨ New Features
