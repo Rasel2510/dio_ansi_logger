@@ -7,9 +7,11 @@ A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and respo
 ## ✨ Features
 
 - 📦 **Structured output** — bordered sections for REQUEST, RESPONSE ✓ and ERROR ✕  
-- 🎨 **4 built-in themes** — `dark`, `minimal`, `solarized`, `nord`  
+- 🎨 **5 built-in themes** — `dark`, `minimal`, `solarized`, `nord`, `matrix`  
 - 🖌️ **Fully customizable** — control the color of every single field  
 - 🌈 **Syntax-highlighted JSON** — keys, strings, numbers, booleans and nulls each get their own color  
+- ⏱ **Response time** — see exactly how long every request takes
+- 🔒 **Header redaction** — sensitive headers masked automatically  
 - ✂️ **Body truncation** — set `maxBodyLength` to prevent huge payloads flooding the console  
 - 🔧 **Toggleable sections** — disable request, response or error logging independently  
 - 0️⃣ **Zero extra dependencies** — only requires `dio`  
@@ -25,11 +27,12 @@ A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and respo
   Method  : POST
   URL     : https://api.example.com/auth/login
   Headers :
-             Content-Type: application/json
+             content-type: application/json
+             authorization: [REDACTED]
   Body    :
     {
       "email": "rafi@example.com",
-      "password": "••••••••"
+      "password": "secret"
     }
 ╚════════════════════════════════════════════════════
 
@@ -39,8 +42,7 @@ A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and respo
   Status  : 200 OK
   Method  : POST
   URL     : https://api.example.com/auth/login
-  Headers :
-             Content-Type: application/json
+  Time    : ⏱ 213 ms
   Body    :
     {
       "token": "eyJhbGciOiJIUzI1NiJ9...",
@@ -60,7 +62,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dio_ansi_logger: ^1.0.5
+  dio_ansi_logger: ^1.0.6
 ```
 
 Then run:
@@ -161,9 +163,63 @@ Combine them: `Ansi.bold + Ansi.brightGreen` = bold bright green.
 | `logResponse` | `bool` | `true` | Log successful responses |
 | `logError` | `bool` | `true` | Log errors (debug mode only) |
 | `maxBodyLength` | `int` | `5000` | Max body chars before truncation |
+| `logResponseTime` | `bool` | `true` | Show ⏱ elapsed ms on response/error |
+| `redactedHeaders` | `Set<String>` | `{authorization, x-api-key, cookie, set-cookie}` | Headers to mask |
+| `redactedPlaceholder` | `String` | `[REDACTED]` | Value shown instead of redacted header |
+
+---
+
+## 🔒 Header Redaction
+
+Sensitive headers are masked by default. You can customise which headers are redacted:
+
+```dart
+dio.interceptors.add(const DioLogger(
+  // Add to or replace the default set
+  redactedHeaders: {'authorization', 'x-api-key', 'cookie', 'x-refresh-token'},
+  redactedPlaceholder: '••••••',   // optional — defaults to [REDACTED]
+));
+```
+
+Matching is **case-insensitive** — `Authorization` and `authorization` are both caught.
+
+To disable redaction entirely, pass an empty set:
+
+```dart
+dio.interceptors.add(const DioLogger(redactedHeaders: {}));
+```
+
+---
+
+## ⏱ Response Time
+
+Elapsed time is shown automatically on the `Time` field of every RESPONSE and ERROR log.  
+Disable it with:
+
+```dart
+dio.interceptors.add(const DioLogger(logResponseTime: false));
+```
+
+---
+
+## 📝 AnsiLog — General Purpose Logger
+
+`AnsiLog` can be called from anywhere — repositories, controllers, services, etc.
+
+```dart
+// Disable in release builds (call once in main.dart)
+AnsiLog.enabled = kDebugMode;
+
+AnsiLog.debug('User loaded: $user');
+AnsiLog.info('Cache hit for key: $key');
+AnsiLog.success('Payment completed');
+AnsiLog.warning('Token expiring soon');
+AnsiLog.error('Login failed', error: e);
+AnsiLog.json(response.data, tag: 'GetTourApi');
+```
 
 ---
 
 ## 📄 License
 
-MIT © Your Name
+MIT © [RASEL](https://github.com/Rasel2510)

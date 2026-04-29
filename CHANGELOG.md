@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.0.6
+
+### ✨ New Features
+
+- **Response time tracking** — a `Time : ⏱ X ms` field now appears on every
+  RESPONSE ✓ and ERROR ✕ block showing the round-trip duration.
+  Concurrent requests are timed independently so parallel calls never
+  interfere with each other.
+  Toggle with `logResponseTime` (default `true`).
+
+- **Sensitive header redaction** — header values whose keys match
+  `redactedHeaders` are replaced with `redactedPlaceholder` in both request
+  and response logs. Matching is case-insensitive.
+  Ships with safe defaults: `authorization`, `x-api-key`, `cookie`, `set-cookie`.
+  Fully configurable — pass a custom set or `{}` to disable entirely.
+
+### ⚙️ New `DioLogger` parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `logResponseTime` | `bool` | `true` | Show ⏱ elapsed ms on RESPONSE / ERROR |
+| `redactedHeaders` | `Set<String>` | `{authorization, x-api-key, cookie, set-cookie}` | Header keys to mask |
+| `redactedPlaceholder` | `String` | `[REDACTED]` | Replacement shown for masked headers |
+
 ## 1.0.5
 
 - Fixed static analysis warning: added
