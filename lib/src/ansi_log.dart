@@ -46,7 +46,7 @@ abstract final class AnsiLog {
   /// ```
   ///
   /// Defaults to `true` for backwards compatibility.
-  static bool enabled = !bool.fromEnvironment('dart.vm.product');
+  static bool enabled = !const bool.fromEnvironment('dart.vm.product');
 
   // ─── Public API ────────────────────────────────────────────────────────────
 

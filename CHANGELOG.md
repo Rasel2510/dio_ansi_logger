@@ -1,11 +1,17 @@
 # Changelog
 
+## 1.0.9
+
+- Made `enabled` a `const` field; removed redundant inner `const`.
+
 ## 1.0.8
 
 - Added `logResponseHeaders` parameter (default `false`) — response headers are now hidden by default as they are typically noisy
+
 ## 1.0.7
 
 - Fixed static analysis: added curly braces to `if` statements in `_colorizeValue` and `_statusColor` (lib/src/logger.dart)
+
 ## 1.0.6
 
 ### ✨ New Features
