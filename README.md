@@ -10,10 +10,16 @@ A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and respo
 - 🎨 **5 built-in themes** — `dark`, `minimal`, `solarized`, `nord`, `matrix`  
 - 🖌️ **Fully customizable** — control the color of every single field  
 - 🌈 **Syntax-highlighted JSON** — keys, strings, numbers, booleans and nulls each get their own color  
-- ⏱ **Response time** — see exactly how long every request takes
+- ⏱ **Response time tracking** — see exactly how long every request takes  
 - 🔒 **Header redaction** — sensitive headers masked automatically  
-- ✂️ **Body truncation** — set `maxBodyLength` to prevent huge payloads flooding the console  
-- 🔧 **Toggleable sections** — disable request, response or error logging independently  
+- 🔍 **Smart filtering** — silence logs for specific endpoints  
+- 🧩 **Granular logging control** — toggle headers/body independently  
+- 📝 **Custom log output** — send logs to Talker, Firebase, or anywhere  
+- ✂️ **Body truncation** — prevent huge payloads flooding the console  
+- 🎯 **Improved FormData support** — readable fields + file metadata  
+- 🔢 **Scientific number support** — handles `1e10`, `2.3E-4`  
+- 🌐 **Extended HTTP methods** — HEAD, OPTIONS, CONNECT, TRACE  
+- 🔗 **Underlined URLs** — better readability in logs  
 - 0️⃣ **Zero extra dependencies** — only requires `dio`  
 
 ---
@@ -62,7 +68,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dio_ansi_logger: ^1.0.8
+  dio_ansi_logger: ^1.1.0
 ```
 
 Then run:

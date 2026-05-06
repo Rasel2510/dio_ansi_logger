@@ -7,6 +7,13 @@ import 'theme.dart';
 /// ```dart
 /// dio.interceptors.add(DioLogger(theme: LoggerThemes.minimal));
 /// ```
+///
+/// Or tweak a preset with [LoggerTheme.copyWith]:
+/// ```dart
+/// dio.interceptors.add(DioLogger(
+///   theme: LoggerThemes.dark.copyWith(errorTitle: Ansi.bold + Ansi.brightMagenta),
+/// ));
+/// ```
 abstract final class LoggerThemes {
   LoggerThemes._();
 
@@ -17,6 +24,7 @@ abstract final class LoggerThemes {
     sectionTitle: Ansi.bold + Ansi.brightCyan,
     label: Ansi.dim + Ansi.white,
     value: Ansi.brightWhite,
+    underline: Ansi.underline,
     methodGet: Ansi.bold + Ansi.brightGreen,
     methodPost: Ansi.bold + Ansi.brightBlue,
     methodPut: Ansi.bold + Ansi.brightYellow,
@@ -42,6 +50,7 @@ abstract final class LoggerThemes {
     sectionTitle: Ansi.bold + Ansi.white,
     label: Ansi.dim + Ansi.white,
     value: Ansi.white,
+    underline: Ansi.underline,
     methodGet: Ansi.bold + Ansi.green,
     methodPost: Ansi.bold + Ansi.blue,
     methodPut: Ansi.bold + Ansi.yellow,
@@ -67,6 +76,7 @@ abstract final class LoggerThemes {
     sectionTitle: Ansi.bold + Ansi.yellow,
     label: Ansi.dim + Ansi.cyan,
     value: Ansi.white,
+    underline: Ansi.underline,
     methodGet: Ansi.bold + Ansi.green,
     methodPost: Ansi.bold + Ansi.blue,
     methodPut: Ansi.bold + Ansi.yellow,
@@ -92,6 +102,7 @@ abstract final class LoggerThemes {
     sectionTitle: Ansi.bold + Ansi.brightBlue,
     label: Ansi.dim + Ansi.white,
     value: Ansi.brightWhite,
+    underline: Ansi.underline,
     methodGet: Ansi.bold + Ansi.brightGreen,
     methodPost: Ansi.bold + Ansi.brightBlue,
     methodPut: Ansi.bold + Ansi.brightYellow,
@@ -119,6 +130,7 @@ abstract final class LoggerThemes {
     sectionTitle: Ansi.bold + Ansi.brightGreen,
     label: Ansi.dim + Ansi.green,
     value: Ansi.brightGreen,
+    underline: Ansi.underline,
     methodGet: Ansi.bold + Ansi.brightGreen,
     methodPost: Ansi.bold + Ansi.brightGreen,
     methodPut: Ansi.bold + Ansi.brightGreen,

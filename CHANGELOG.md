@@ -1,5 +1,42 @@
 # Changelog
 
+## 1.1.0
+
+### ✨ Improvements & Fixes
+
+- Fixed timer collisions using unique request IDs (no conflicts in concurrent calls)
+- Fixed timer leaks with automatic cleanup for stale timers (>60s)
+- Added `logPrint` callback for custom logging (Talker, Firebase, etc.)
+- Added `requestFilter`, `responseFilter`, `errorFilter` to silence specific endpoints
+- Added granular logging controls:
+  - `logRequestHeaders`
+  - `logRequestBody`
+  - `logResponseBody`
+- Improved FormData rendering (fields + file metadata instead of broken JSON)
+- Fixed JSON colorizer (correct handling of URLs, timestamps, `:` inside strings)
+- Added support for scientific notation numbers (`1e10`, `2.3E-4`)
+- Extended HTTP method support (HEAD, OPTIONS, CONNECT, TRACE)
+- URLs are now underlined in logs
+
+### 🎨 Theme & ANSI Updates
+
+- Added underline support to themes
+- Added `copyWith()` to `LoggerTheme`
+- Updated all themes to support underline
+- Expanded ANSI styles:
+  - italic, underline, strikethrough
+  - Background colors (`bgRed`, `bgGreen`, etc.)
+
+### 🧪 Tests
+
+- Expanded test suite from ~20 → 60+ tests
+- Added coverage for:
+  - Filters
+  - FormData handling
+  - JSON edge cases
+  - Theme customization
+  - Custom logging (`logPrint`)
+  
 ## 1.0.9
 
 - Made `enabled` a `const` field; removed redundant inner `const`.

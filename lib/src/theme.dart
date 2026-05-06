@@ -12,6 +12,7 @@ import 'ansi.dart';
 ///   sectionTitle:   Ansi.bold + Ansi.brightMagenta,
 ///   label:          Ansi.dim + Ansi.white,
 ///   value:          Ansi.brightWhite,
+///   underline:      Ansi.underline,
 ///   methodGet:      Ansi.bold + Ansi.brightGreen,
 ///   methodPost:     Ansi.bold + Ansi.brightBlue,
 ///   methodPut:      Ansi.bold + Ansi.brightYellow,
@@ -31,6 +32,14 @@ import 'ansi.dart';
 ///   reset:          Ansi.reset,
 /// );
 /// ```
+///
+/// ## Tweaking a built-in theme with copyWith
+/// ```dart
+/// final myTheme = LoggerThemes.dark.copyWith(
+///   errorTitle: Ansi.bold + Ansi.brightMagenta,
+///   jsonKey: Ansi.brightYellow,
+/// );
+/// ```
 final class LoggerTheme {
   /// Color of the `╔═══╗` border lines.
   final String sectionBorder;
@@ -43,6 +52,11 @@ final class LoggerTheme {
 
   /// Default color for plain field values.
   final String value;
+
+  /// Underline style applied to URLs.
+  ///
+  /// Set to `''` (empty string) to disable URL underlining.
+  final String underline;
 
   /// Color for the GET method badge.
   final String methodGet;
@@ -100,6 +114,7 @@ final class LoggerTheme {
     required this.sectionTitle,
     required this.label,
     required this.value,
+    required this.underline,
     required this.methodGet,
     required this.methodPost,
     required this.methodPut,
@@ -119,6 +134,65 @@ final class LoggerTheme {
     required this.reset,
   });
 
+  /// Returns a copy of this theme with the given fields replaced.
+  ///
+  /// Useful for tweaking a single color of a built-in theme without
+  /// having to specify all fields from scratch.
+  ///
+  /// ```dart
+  /// final myTheme = LoggerThemes.dark.copyWith(
+  ///   errorTitle: Ansi.bold + Ansi.brightMagenta,
+  /// );
+  /// ```
+  LoggerTheme copyWith({
+    String? sectionBorder,
+    String? sectionTitle,
+    String? label,
+    String? value,
+    String? underline,
+    String? methodGet,
+    String? methodPost,
+    String? methodPut,
+    String? methodDelete,
+    String? methodPatch,
+    String? statusSuccess,
+    String? statusRedirect,
+    String? statusError,
+    String? jsonKey,
+    String? jsonString,
+    String? jsonNumber,
+    String? jsonBool,
+    String? jsonNull,
+    String? errorTitle,
+    String? errorValue,
+    String? dim,
+    String? reset,
+  }) =>
+      LoggerTheme(
+        sectionBorder: sectionBorder ?? this.sectionBorder,
+        sectionTitle: sectionTitle ?? this.sectionTitle,
+        label: label ?? this.label,
+        value: value ?? this.value,
+        underline: underline ?? this.underline,
+        methodGet: methodGet ?? this.methodGet,
+        methodPost: methodPost ?? this.methodPost,
+        methodPut: methodPut ?? this.methodPut,
+        methodDelete: methodDelete ?? this.methodDelete,
+        methodPatch: methodPatch ?? this.methodPatch,
+        statusSuccess: statusSuccess ?? this.statusSuccess,
+        statusRedirect: statusRedirect ?? this.statusRedirect,
+        statusError: statusError ?? this.statusError,
+        jsonKey: jsonKey ?? this.jsonKey,
+        jsonString: jsonString ?? this.jsonString,
+        jsonNumber: jsonNumber ?? this.jsonNumber,
+        jsonBool: jsonBool ?? this.jsonBool,
+        jsonNull: jsonNull ?? this.jsonNull,
+        errorTitle: errorTitle ?? this.errorTitle,
+        errorValue: errorValue ?? this.errorValue,
+        dim: dim ?? this.dim,
+        reset: reset ?? this.reset,
+      );
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -127,6 +201,7 @@ final class LoggerTheme {
           sectionTitle == other.sectionTitle &&
           label == other.label &&
           value == other.value &&
+          underline == other.underline &&
           methodGet == other.methodGet &&
           methodPost == other.methodPost &&
           methodPut == other.methodPut &&
@@ -147,10 +222,27 @@ final class LoggerTheme {
 
   @override
   int get hashCode => Object.hashAll([
-        sectionBorder, sectionTitle, label, value,
-        methodGet, methodPost, methodPut, methodDelete, methodPatch,
-        statusSuccess, statusRedirect, statusError,
-        jsonKey, jsonString, jsonNumber, jsonBool, jsonNull,
-        errorTitle, errorValue, dim, reset,
+        sectionBorder,
+        sectionTitle,
+        label,
+        value,
+        underline,
+        methodGet,
+        methodPost,
+        methodPut,
+        methodDelete,
+        methodPatch,
+        statusSuccess,
+        statusRedirect,
+        statusError,
+        jsonKey,
+        jsonString,
+        jsonNumber,
+        jsonBool,
+        jsonNull,
+        errorTitle,
+        errorValue,
+        dim,
+        reset,
       ]);
 }
