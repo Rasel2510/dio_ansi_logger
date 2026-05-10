@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.1
+
+- Fixed a `RangeError` thrown by `_colorizeJson` when `maxBodyLength` truncates
+  the response body mid-line, leaving a JSON key with no value (e.g. `"title":`).
+  The `substring` call now clamps its start index to the string length.
+- Fixed an `InterceptorState` signal propagating out of `onRequest`, `onResponse`,
+  and `onError` when the interceptor is invoked outside a live Dio chain (e.g.
+  in unit tests). The internal `handler.next()` call is now guarded with a
+  bare `catch` so the signal does not escape.
+  
 ## 1.1.0
 
 ### ✨ Improvements & Fixes

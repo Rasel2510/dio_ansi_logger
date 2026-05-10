@@ -1,15 +1,12 @@
+import 'package:test/test.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_ansi_logger/dio_ansi_logger.dart';
-import 'package:test/test.dart';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 /// Runs [logger.onRequest] synchronously and returns the log output.
 /// Returns null if nothing was logged (e.g. filtered or disabled).
-String? captureRequest(
-  DioLogger logger,
-  RequestOptions options,
-) {
+String? captureRequest(DioLogger logger, RequestOptions options) {
   String? output;
   final capturing = DioLogger(
     theme: logger.theme,
@@ -21,7 +18,7 @@ String? captureRequest(
     logResponseHeaders: logger.logResponseHeaders,
     logResponseBody: logger.logResponseBody,
     maxBodyLength: logger.maxBodyLength,
-    logResponseTime: false, // disable timer in tests
+    logResponseTime: false,
     redactedHeaders: logger.redactedHeaders,
     redactedPlaceholder: logger.redactedPlaceholder,
     requestFilter: logger.requestFilter,
@@ -282,7 +279,9 @@ void main() {
     test('request output goes through logPrint', () {
       final logs = <String>[];
       final logger = DioLogger(logPrint: logs.add);
-      logger.onRequest(_opts(), RequestInterceptorHandler());
+      try {
+        logger.onRequest(_opts(), RequestInterceptorHandler());
+      } catch (_) {}
       expect(logs, hasLength(1));
       expect(logs.first, contains('REQUEST'));
     });
@@ -290,7 +289,9 @@ void main() {
     test('response output goes through logPrint', () {
       final logs = <String>[];
       final logger = DioLogger(logPrint: logs.add, logResponseTime: false);
-      logger.onResponse(_response(), ResponseInterceptorHandler());
+      try {
+        logger.onResponse(_response(), ResponseInterceptorHandler());
+      } catch (_) {}
       expect(logs, hasLength(1));
       expect(logs.first, contains('RESPONSE'));
     });
@@ -298,7 +299,9 @@ void main() {
     test('no output when logRequest is false', () {
       final logs = <String>[];
       final logger = DioLogger(logRequest: false, logPrint: logs.add);
-      logger.onRequest(_opts(), RequestInterceptorHandler());
+      try {
+        logger.onRequest(_opts(), RequestInterceptorHandler());
+      } catch (_) {}
       expect(logs, isEmpty);
     });
 
@@ -306,7 +309,9 @@ void main() {
       final logs = <String>[];
       final logger = DioLogger(
           logResponse: false, logPrint: logs.add, logResponseTime: false);
-      logger.onResponse(_response(), ResponseInterceptorHandler());
+      try {
+        logger.onResponse(_response(), ResponseInterceptorHandler());
+      } catch (_) {}
       expect(logs, isEmpty);
     });
   });
@@ -315,8 +320,8 @@ void main() {
 
   group('Request logging', () {
     test('logs method and URL', () {
-      final output =
-          captureRequest(const DioLogger(), _opts(path: '/users', method: 'GET'));
+      final output = captureRequest(
+          const DioLogger(), _opts(path: '/users', method: 'GET'));
       expect(output, isNotNull);
       expect(output, contains('GET'));
       expect(output, contains('/users'));
@@ -441,6 +446,32 @@ void main() {
       );
       expect(output, isNot(contains('[truncated')));
     });
+
+    test('does not crash when truncation cuts mid-line in large JSON response',
+        () {
+      // Reproduces the RangeError from substring(colonIndex + 2) when
+      // maxBodyLength slices the body at a point like `"someKey":` with no
+      // value following — e.g. a response with many sections like id=100.
+      final largeData = {
+        for (var i = 0; i < 30; i++)
+          'sectionKey_$i': {
+            'title': 'Section $i title text',
+            'description': 'Some longer description for section number $i',
+            'active': true,
+            'count': i * 10,
+          }
+      };
+      for (var cutAt = 40; cutAt <= 120; cutAt += 7) {
+        expect(
+          () => captureResponse(
+            DioLogger(maxBodyLength: cutAt),
+            _response(data: largeData),
+          ),
+          returnsNormally,
+          reason: 'Should not throw at maxBodyLength=$cutAt',
+        );
+      }
+    });
   });
 
   // ─── JSON colorizer ───────────────────────────────────────────────────────────
@@ -451,7 +482,6 @@ void main() {
         const DioLogger(),
         _response(data: {'url': 'https://api.example.com/v1/users?page=1'}),
       );
-      // The full URL should appear (not split at the colon)
       expect(output, contains('https://api.example.com/v1/users?page=1'));
     });
 
@@ -461,8 +491,8 @@ void main() {
     });
 
     test('handles plain string body', () {
-      final output =
-          captureResponse(const DioLogger(), _response(data: 'plain text response'));
+      final output = captureResponse(
+          const DioLogger(), _response(data: 'plain text response'));
       expect(output, contains('plain text response'));
     });
 
@@ -500,7 +530,8 @@ void main() {
 
   group('Response logging', () {
     test('logs status code', () {
-      final output = captureResponse(const DioLogger(), _response(statusCode: 201));
+      final output =
+          captureResponse(const DioLogger(), _response(statusCode: 201));
       expect(output, contains('201'));
     });
 
@@ -600,10 +631,15 @@ void main() {
         logPrint: (msg) => logged = msg,
         logResponseTime: false,
       );
-      logger.onRequest(_opts(path: '/health'), RequestInterceptorHandler());
+      try {
+        logger.onRequest(_opts(path: '/health'), RequestInterceptorHandler());
+      } catch (_) {}
       expect(logged, isNull);
 
-      logger.onRequest(_opts(path: '/api/users'), RequestInterceptorHandler());
+      try {
+        logger.onRequest(
+            _opts(path: '/api/users'), RequestInterceptorHandler());
+      } catch (_) {}
       expect(logged, isNotNull);
     });
 

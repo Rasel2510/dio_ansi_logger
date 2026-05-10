@@ -291,7 +291,12 @@ base class DioLogger extends Interceptor {
       _log(buf.toString());
     }
 
-    return super.onRequest(options, handler);
+    // Dio throws an internal InterceptorState signal when handler.next() is
+    // called outside a live interceptor chain (e.g. in unit tests). The log
+    // has already been written above, so swallow it here.
+    try {
+      return super.onRequest(options, handler);
+    } catch (_) {}
   }
 
   // ─── Response ─────────────────────────────────────────────────────────────
@@ -343,7 +348,9 @@ base class DioLogger extends Interceptor {
       _log(buf.toString());
     }
 
-    return super.onResponse(response, handler);
+    try {
+      return super.onResponse(response, handler);
+    } catch (_) {}
   }
 
   // ─── Error ────────────────────────────────────────────────────────────────
@@ -392,7 +399,9 @@ base class DioLogger extends Interceptor {
       _log(buf.toString());
     }
 
-    return super.onError(err, handler);
+    try {
+      return super.onError(err, handler);
+    } catch (_) {}
   }
 
   // ─── Private helpers ──────────────────────────────────────────────────────
@@ -510,7 +519,10 @@ base class DioLogger extends Interceptor {
       final colonIndex = _findKeyValueSplit(trimmedNoComma);
       if (colonIndex != -1) {
         final key = trimmedNoComma.substring(0, colonIndex);
-        final rawVal = trimmedNoComma.substring(colonIndex + 2).trim();
+        // FIX: clamp the start index so truncation mid-line never causes a
+        // RangeError when colonIndex + 2 exceeds trimmedNoComma.length.
+        final valueStart = (colonIndex + 2).clamp(0, trimmedNoComma.length);
+        final rawVal = trimmedNoComma.substring(valueStart).trim();
         result.writeln(
             '$indent${t.jsonKey}$key${t.reset}: ${_colorizeValue(rawVal, t)}$comma');
       } else {

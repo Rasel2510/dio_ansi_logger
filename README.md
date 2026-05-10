@@ -1,5 +1,9 @@
 # dio_ansi_logger
 
+[![pub version](https://img.shields.io/pub/v/dio_ansi_logger)](https://pub.dev/packages/dio_ansi_logger)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![Dart](https://img.shields.io/badge/Dart-%3E%3D3.0.0-blue)](https://dart.dev)
+
 A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and responses with **ANSI colors**, structured formatting, and fully customizable themes — straight to your Flutter debug console.
 
 ---
@@ -68,7 +72,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dio_ansi_logger: ^1.1.0
+  dio_ansi_logger: ^1.1.1
 ```
 
 Then run:
