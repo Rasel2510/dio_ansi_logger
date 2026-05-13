@@ -24,6 +24,8 @@ A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and respo
 - 🔢 **Scientific number support** — handles `1e10`, `2.3E-4`  
 - 🌐 **Extended HTTP methods** — HEAD, OPTIONS, CONNECT, TRACE  
 - 🔗 **Underlined URLs** — better readability in logs  
+- 🌀 **cURL export** — print a ready-to-run `curl` command after each request  
+- ♻️ **Retry logging** — surface retry attempts from your retry interceptor  
 - 0️⃣ **Zero extra dependencies** — only requires `dio`  
 
 ---
@@ -44,6 +46,12 @@ A beautiful, **Postman-style** Dio interceptor that logs HTTP requests and respo
       "email": "rafi@example.com",
       "password": "secret"
     }
+┌─ cURL ─────────────────────────────────
+curl -X POST 'https://api.example.com/auth/login' \
+  -H 'content-type: application/json' \
+  -H 'authorization: [REDACTED]' \
+  -d '{"email":"rafi@example.com","password":"secret"}'
+└────────────────────────────────────────
 ╚════════════════════════════════════════════════════
 
 ╔════════════════════════════════════════════════════
@@ -72,7 +80,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dio_ansi_logger: ^1.1.1
+  dio_ansi_logger: ^1.2.0
 ```
 
 Then run:
@@ -176,6 +184,8 @@ Combine them: `Ansi.bold + Ansi.brightGreen` = bold bright green.
 | `logResponseTime` | `bool` | `true` | Show ⏱ elapsed ms on response/error |
 | `redactedHeaders` | `Set<String>` | `{authorization, x-api-key, cookie, set-cookie}` | Headers to mask |
 | `redactedPlaceholder` | `String` | `[REDACTED]` | Value shown instead of redacted header |
+| `showCurl` | `bool` | `false` | Print a `curl` command after each request |
+| `logRetries` | `bool` | `false` | Print `♻ Retry #N` on each retry attempt |
 
 ---
 
@@ -209,6 +219,49 @@ Disable it with:
 ```dart
 dio.interceptors.add(const DioLogger(logResponseTime: false));
 ```
+
+---
+
+## 🌀 cURL Export
+
+Enable `showCurl` to print a ready-to-run `curl` command after each request. Headers respect your `redactedHeaders` config, and the body is formatted as `-d` for JSON or `-F` for FormData:
+
+```dart
+dio.interceptors.add(const DioLogger(showCurl: true));
+```
+
+Example output:
+
+```
+┌─ cURL ─────────────────────────────────
+curl -X POST 'https://api.example.com/users' \
+  -H 'content-type: application/json' \
+  -H 'authorization: [REDACTED]' \
+  -d '{"name":"Rasel"}'
+└────────────────────────────────────────
+```
+
+---
+
+## ♻️ Retry Logging
+
+Enable `logRetries` to surface retry attempts in the log. In your retry interceptor, increment the counter in `options.extra` using the exported key constant:
+
+```dart
+import 'package:dio_ansi_logger/dio_ansi_logger.dart';
+
+// Inside your retry interceptor's onRequest or onError:
+options.extra[kDioAnsiLoggerRetryCount] =
+    (options.extra[kDioAnsiLoggerRetryCount] ?? 0) + 1;
+```
+
+Then enable the flag on the logger:
+
+```dart
+dio.interceptors.add(const DioLogger(logRetries: true));
+```
+
+The logger will print `♻ Retry #1`, `♻ Retry #2`, etc. alongside the request log.
 
 ---
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0 
+
+### Added
+- **`showCurl`** option on `DioLogger` — prints a formatted `curl` command after each request, including method, URL, headers, and body (`-d` for JSON, `-F` for FormData). Sensitive headers are automatically redacted when `redactHeaders` is configured.
+- **`logRetries`** option on `DioLogger` — prints a `♻ Retry #N` line on each retry attempt. Requires the retry interceptor to increment `options.extra[kDioAnsiLoggerRetryCount]` on each attempt.
+- **`kDioAnsiLoggerRetryCount`** — a public constant exported from the package so retry interceptors can set the retry count without hardcoding the internal key string.
+
+### Changed
+- `onRequest` now conditionally renders the cURL block and retry line based on the new flags, with no impact on existing behaviour when both are `false` (the default).
+
 ## 1.1.1
 
 - Fixed a `RangeError` thrown by `_colorizeJson` when `maxBodyLength` truncates

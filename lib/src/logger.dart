@@ -14,6 +14,10 @@ const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
 /// Internal key used to store unique request IDs in [RequestOptions.extra].
 const _kLogId = '_dioAnsiLoggerId';
 
+/// Key that a retry interceptor should increment in [RequestOptions.extra]
+/// before each retry. [DioLogger] reads this to display `♻ Retry #N`.
+const kDioAnsiLoggerRetryCount = '_dioAnsiLoggerRetryCount';
+
 /// A Dio interceptor that logs HTTP requests, responses, and errors
 /// in a structured, Postman-style format with ANSI terminal colors.
 ///
@@ -91,6 +95,24 @@ const _kLogId = '_dioAnsiLoggerId';
 /// dio.interceptors.add(DioLogger(logResponseTime: true));
 /// ```
 ///
+/// ## cURL command
+/// ```dart
+/// dio.interceptors.add(DioLogger(showCurl: true));
+/// ```
+/// Prints a ready-to-paste `curl` command for every request, e.g.:
+/// ```
+/// curl -X POST 'https://api.example.com/login' \
+///   -H 'content-type: application/json' \
+///   -d '{"email":"user@example.com"}'
+/// ```
+///
+/// ## Retry logging
+/// ```dart
+/// dio.interceptors.add(DioLogger(logRetries: true));
+/// ```
+/// Prints `♻ Retry #N` each time Dio retries a failed request, so you can
+/// see exactly how many attempts were made before success or final failure.
+///
 /// > **Note:** ANSI colors render in the **VS Code Debug Console** and most
 /// > Unix terminals. In Android Studio install the **ANSI Highlighting** plugin.
 ///
@@ -164,6 +186,34 @@ base class DioLogger extends Interceptor {
   /// Defaults to `true`.
   final bool logResponseTime;
 
+  /// Whether to print a copy-paste `curl` command for every request.
+  ///
+  /// The generated command includes the HTTP method, URL, all non-redacted
+  /// headers, and the request body (JSON or form fields). Useful for sharing
+  /// failing requests with backend developers or replaying them in a terminal.
+  ///
+  /// Defaults to `false`.
+  ///
+  /// Example output:
+  /// ```
+  /// curl -X POST 'https://api.example.com/users' \
+  ///   -H 'content-type: application/json' \
+  ///   -d '{"name":"Rasel"}'
+  /// ```
+  final bool showCurl;
+
+  /// Whether to log each retry attempt with its attempt number.
+  ///
+  /// When `true`, prints `♻ Retry #N` each time Dio retries a request,
+  /// so you can see exactly how many attempts were made before success
+  /// or final failure.
+  ///
+  /// Requires your Dio setup to use a retry interceptor that increments
+  /// `options.extra['_dioAnsiLoggerRetryCount']` before each retry.
+  ///
+  /// Defaults to `false`.
+  final bool logRetries;
+
   /// Header keys (lowercase) whose values are replaced with [redactedPlaceholder].
   ///
   /// Matching is case-insensitive. Defaults to
@@ -228,6 +278,8 @@ base class DioLogger extends Interceptor {
     this.logResponseBody = true,
     this.maxBodyLength = 5000,
     this.logResponseTime = true,
+    this.showCurl = false,
+    this.logRetries = false,
     this.redactedHeaders = const {
       'authorization',
       'x-api-key',
@@ -289,6 +341,24 @@ base class DioLogger extends Interceptor {
 
       buf.write(_borderBottom(t));
       _log(buf.toString());
+    }
+
+    // ── cURL ──────────────────────────────────────────────────────────────────
+    if (showCurl && logRequest && (requestFilter?.call(options) ?? true)) {
+      _log(_buildCurl(options));
+    }
+
+    // ── Retry notice ──────────────────────────────────────────────────────────
+    if (logRetries) {
+      final retryCount = options.extra[kDioAnsiLoggerRetryCount];
+      if (retryCount is int && retryCount > 0) {
+        final t = theme;
+        _log(
+          '${t.statusRedirect}♻ Retry #$retryCount${t.reset} '
+          '${t.dim}→${t.reset} ${t.value}${options.method.toUpperCase()} '
+          '${options.baseUrl}${options.path}${t.reset}',
+        );
+      }
     }
 
     // Dio throws an internal InterceptorState signal when handler.next() is
@@ -591,6 +661,59 @@ base class DioLogger extends Interceptor {
     if (status >= 200 && status < 300) return theme.statusSuccess;
     if (status >= 300 && status < 400) return theme.statusRedirect;
     return theme.statusError;
+  }
+
+  /// Builds a copy-paste `curl` command string from [options].
+  ///
+  /// - Redacted headers are replaced with [redactedPlaceholder].
+  /// - [FormData] bodies are expanded to `-F` flags.
+  /// - JSON / string bodies are passed via `-d`.
+  String _buildCurl(RequestOptions options) {
+    final t = theme;
+    final method = options.method.toUpperCase();
+
+    // Build query string if present
+    final uri = options.uri; // already includes query params
+    final fullUrl = uri.toString();
+
+    final parts = <String>["curl -X $method '$fullUrl'"];
+
+    // Headers
+    for (final entry in options.headers.entries) {
+      final key = entry.key;
+      final val = redactedHeaders.contains(key.toLowerCase())
+          ? redactedPlaceholder
+          : entry.value?.toString() ?? '';
+      parts.add("  -H '$key: $val'");
+    }
+
+    // Body
+    final data = options.data;
+    if (data != null) {
+      if (data is FormData) {
+        for (final field in data.fields) {
+          parts.add("  -F '${field.key}=${field.value}'");
+        }
+        for (final file in data.files) {
+          parts.add("  -F '${file.key}=@${file.value.filename ?? 'file'}'");
+        }
+      } else {
+        String body;
+        try {
+          body = jsonEncode(data);
+        } catch (_) {
+          body = data.toString();
+        }
+        // Escape single quotes inside the body
+        body = body.replaceAll("'", r"'\''");
+        parts.add("  -d '$body'");
+      }
+    }
+
+    final curlCmd = parts.join(' \\\n');
+    return '${t.dim}┌─ cURL ─────────────────────────────────────────────${t.reset}\n'
+        '${t.jsonString}$curlCmd${t.reset}\n'
+        '${t.dim}└────────────────────────────────────────────────────${t.reset}';
   }
 
   void _log(String message) {
